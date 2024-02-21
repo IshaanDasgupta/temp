@@ -1,0 +1,41 @@
+.vc{
+    height: 100vh;
+    background-color: rgb(51, 201, 201);
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 50px;
+    padding-top: 50px;
+}
+
+.person{
+    width: 80%;
+    height: 40%;
+    background-color: aliceblue;
+    border: 2px solid black;
+}
+
+.ai{
+    width: 80%;
+    height: 40%;
+    background-color: aliceblue;
+    border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+}
+
+.robo{
+    height: 70%;
+    width: 40%;
+    border-radius: 50%;
+}
+
+.image{
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
