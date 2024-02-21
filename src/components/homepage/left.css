@@ -1,0 +1,41 @@
+.left{
+    position: relative;
+    height: 100vh;
+}
+
+.middle{
+    padding: 10px;
+    position: absolute;
+    top: 170px;
+    justify-content: space-between;
+    height: 40vh;
+}
+
+.bottom{
+    display: flex;
+    position: absolute;
+    top: 460px;
+    padding: 10px;
+    justify-content: space-between;
+    width: 100%;
+}
+.but1{
+    border-radius: 10%;
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 20px;
+}
+
+.but2{
+    border-radius: 10%;
+    background-color: rgb(228, 228, 241);
+    color: black;
+    border: none;
+    padding: 20px;
+
+}
+
+.para{
+    font-size: 0.7rem;
+}
