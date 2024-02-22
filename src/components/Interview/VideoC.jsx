@@ -1,94 +1,73 @@
-import React, { useEffect } from 'react'
-import "./video.css"
+import React, { useEffect } from "react";
+import "./video.css";
 // import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 
+let context;
+let buf;
+
 const VideoC = (data) => {
+  useEffect(() => {
+    function playByteArray(byteArray) {
+      console.log(byteArray.length);
+      context = new AudioContext();
 
-    // useEffect =(()=>{
-    //     play_buffersource(data);
-    // },[data])
-    useEffect(() => {
-        play_buffersource(data);
-    }, [data]);
+      const arrayBuffer = new ArrayBuffer(byteArray.length);
+      const bufferView = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < byteArray.length; i++) {
+        bufferView[i] = byteArray[i];
+      }
 
-    const kSampleRate = 44100; // Other sample rates might not work depending on the your browser's AudioContext
-    const kNumSamples = 16834;
-    const kFrequency  = 440;
-    const kPI_2       = Math.PI * 2;
-
-// function play_buffersource(data) {
-//     if (!window.AudioContext) {
-//         if (!window.webkitAudioContext) {
-//             alert("Your browser sucks because it does NOT support any AudioContext!");
-//             return;
-//         }
-//         window.AudioContext = window.webkitAudioContext;
-//     }
-
-//     var ctx = new AudioContext();
-
-//     var buffer = ctx.createBuffer(1, kNumSamples, kSampleRate);
-//     var buf    = buffer.getChannelData(0);
-//     for (i = 0; i < kNumSamples; ++i) {
-//         buf[i] = Math.sin(kFrequency * kPI_2 * i / kSampleRate);
-//     }
-
-//     var node = ctx.createBufferSource(0);
-//     node.buffer = buffer;
-//     node.connect(ctx.destination);
-//     node.noteOn(ctx.currentTime + 0.5);
-
-//     node = ctx.createBufferSource(0);
-//     node.buffer = buffer;
-//     node.connect(ctx.destination);
-//     node.noteOn(ctx.currentTime + 2.0);
-//     node.start(ctx.currentTime + 2.0);
-// }
-
-function play_buffersource(data) {
-    if (!window.AudioContext) {
-        if (!window.webkitAudioContext) {
-            alert("Your browser does not support any AudioContext!");
-            return;
-        }
-        window.AudioContext = window.webkitAudioContext;
+      console.log(arrayBuffer);
+      console.log(byteArray.length);
+      context.decodeAudioData(arrayBuffer, function (buffer) {
+        buf = buffer;
+        play();
+      });
     }
 
-    var ctx = new AudioContext();
-
-    var buffer = ctx.createBuffer(1, kNumSamples, kSampleRate);
-    var buf = buffer.getChannelData(0);
-    for (var i = 0; i < kNumSamples; ++i) {
-        buf[i] = Math.sin(kFrequency * kPI_2 * i / kSampleRate);
+    function play() {
+      var source = context.createBufferSource();
+      source.buffer = buf;
+      source.connect(context.destination);
+      source.start(0);
     }
 
-    var node = ctx.createBufferSource();
-    node.buffer = buffer;
-    node.connect(ctx.destination);
-    node.start(ctx.currentTime + 0.5);
-
-    node = ctx.createBufferSource();
-    node.buffer = buffer;
-    node.connect(ctx.destination);
-    node.start(ctx.currentTime + 2.0);
-}
+    if (data.audio.length) {
+      const byteArray = JSON.parse(data.audio);
+      playByteArray(byteArray);
+      // if (data.audio instanceof ArrayBuffer) {
+      //   const byteArray = new Uint8Array(data.audio);
+      //   console.log("hereeeeeeeeeeeeeeeeeeeee \n", byteArray);
+      //   if (byteArray.length) {
+      //     playByteArray(byteArray);
+      //   }
+      // } else {
+      //   const temp = JSON.parse(data.audio);
+      //   console.log(temp);
+      //   if (temp instanceof ArrayBuffer) {
+      //     console.log("temp is array buffer");
+      //   }
+      // }
+    }
+  }, [data]);
 
   return (
-    <div className='vc'>
-        <div className='person'>
+    <div className="vc">
+      <div className="person"></div>
 
+      <div className="ai">
+        <div className="robo">
+          <img
+            className="image"
+            src="https://images.unsplash.com/photo-1601132359864-c974e79890ac?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="robot"
+          />
+
+          {/* TextToSpeech.talk("Hello Beautiful World!"); */}
         </div>
-
-        <div className='ai'>
-            <div className='robo'>
-                <img className='image' src="https://images.unsplash.com/photo-1601132359864-c974e79890ac?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="robot" />
-
-                {/* TextToSpeech.talk("Hello Beautiful World!"); */}
-
-            </div>
-        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default VideoC
+export default VideoC;
