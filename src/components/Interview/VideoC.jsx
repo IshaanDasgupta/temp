@@ -8,7 +8,6 @@ let buf;
 const VideoC = (data) => {
   useEffect(() => {
     function playByteArray(byteArray) {
-      console.log(byteArray.length);
       context = new AudioContext();
 
       const arrayBuffer = new ArrayBuffer(byteArray.length);
@@ -17,8 +16,6 @@ const VideoC = (data) => {
         bufferView[i] = byteArray[i];
       }
 
-      console.log(arrayBuffer);
-      console.log(byteArray.length);
       context.decodeAudioData(arrayBuffer, function (buffer) {
         buf = buffer;
         play();
@@ -32,23 +29,28 @@ const VideoC = (data) => {
       source.start(0);
     }
 
-    if (data.audio.length) {
-      const byteArray = JSON.parse(data.audio);
-      playByteArray(byteArray);
-      // if (data.audio instanceof ArrayBuffer) {
-      //   const byteArray = new Uint8Array(data.audio);
-      //   console.log("hereeeeeeeeeeeeeeeeeeeee \n", byteArray);
-      //   if (byteArray.length) {
-      //     playByteArray(byteArray);
-      //   }
-      // } else {
-      //   const temp = JSON.parse(data.audio);
-      //   console.log(temp);
-      //   if (temp instanceof ArrayBuffer) {
-      //     console.log("temp is array buffer");
-      //   }
-      // }
+    function sleep(ms) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+      });
     }
+
+    const test = async (data) => {
+      console.log("audio lenght : ", data.audio.length);
+
+      for (let i = data.audio.length - 1; i >= 0; i--) {
+        if (data.audio[i].length) {
+          const byteArrayObj = JSON.parse(data.audio[i]);
+          const byteArray = [];
+          for (let key in Object.keys(byteArrayObj)) {
+            byteArray.push(byteArrayObj[key]);
+          }
+          playByteArray(byteArray);
+          await sleep(1800);
+        }
+      }
+    };
+    test(data);
   }, [data]);
 
   return (
