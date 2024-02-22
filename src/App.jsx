@@ -5,7 +5,7 @@ import './App.css';
 import Score from './Pages/Score';
 import Websc from './Pages/Websc';
 import Interview from './Pages/Interview';
-
+import App2 from './App2';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -13,7 +13,8 @@ function App() {
     <div>
       {/* <HomePage /> */}
       {/* <Score /> */}
-      <Websc/>
+      <App2 />
+      {/* <Websc/> */}
       {/* <Interview /> */}
     </div>
   )
