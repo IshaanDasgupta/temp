@@ -21,19 +21,20 @@ function App2() {
     const [notesStore, setnotesStore] = useState([]);
     function playByteArray(byteArray) {
         const context = new AudioContext();
-  
-        const arrayBuffer = new ArrayBuffer(byteArray.length);
-        const bufferView = new Uint8Array(arrayBuffer);
-        for (let i = 0; i < byteArray.length; i++) {
-          bufferView[i] = byteArray[i];
+        if(byteArray.length){
+            const arrayBuffer = new ArrayBuffer(byteArray.length);
+            const bufferView = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteArray.length; i++) {
+            bufferView[i] = byteArray[i];
+            }
+    
+            context.decodeAudioData(arrayBuffer, function (buffer) {
+            const source = context.createBufferSource();
+            source.buffer = buffer;
+            source.connect(context.destination);
+            source.start(0);
+            });
         }
-  
-        context.decodeAudioData(arrayBuffer, function (buffer) {
-          const source = context.createBufferSource();
-          source.buffer = buffer;
-          source.connect(context.destination);
-          source.start(0);
-        });
       }
     useEffect(() => {
         startRecordController();
@@ -42,16 +43,16 @@ function App2() {
         if (isRecording) {
           microphone.start();
           microphone.onend = () => {
-            console.log("continue..");
+            // console.log("continue..");
           };
         } else {
           microphone.stop();
           microphone.onend = () => {
-            console.log("Stopped microphone on Click");
+            // console.log("Stopped microphone on Click");
           };
         }
         microphone.onstart = () => {
-          console.log("microphones on");
+        //   console.log("microphones on");
         };
       
         microphone.onresult = (event) => {
@@ -59,28 +60,41 @@ function App2() {
             .map((result) => result[0])
             .map((result) => result.transcript)
             .join("");
-          console.log(recordingResult);
+        //   console.log(recordingResult);
           setNote(recordingResult);
           microphone.onerror = (event) => {
-            console.log(event.error);
+            // console.log(event.error);
           };
         };
       };
+    //   const getAIRes = async(text)=>{
+    //     const res = await fetch('http://localhost:3000/store-data',{
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json'},
+    //         body: JSON.stringify({
+    //             message: text
+    //         })
+    //     })
+    //     const result = await res.json();
+    //     console.log(result);
+    //     return result[result.length - 1].text;
+    //   }
     const sendToConvert = async(text)=>{
-        
+        // text = await getAIRes(text);
+        console.log(text);
         const res = await fetch('https://p6rubpnr7e.execute-api.ap-south-1.amazonaws.com/production/generateText',{
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({
-                userText: "Hi there"
+                userID: 'test',
+                userText: text
             })
         });
         const result =  await res.json();
-        console.log(result);
         return result;
     }
     const storeNote = async() => {
-        const result = await  sendToConvert();
+        const result = await  sendToConvert(note);
         const byteArray = result.byteArray;
         playByteArray(byteArray);
         setnotesStore([...notesStore, note]);
